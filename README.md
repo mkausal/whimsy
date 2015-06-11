@@ -26,6 +26,9 @@ To use this app, you need to install the packages using below commands/links:
 To run the app, just clone the code and say
     python startWhimsy.py
 
+To test the accuracy of the app, run the analyzeWhimsy.py from test directory.
+This will require sqlite3 database to be installed on your machine.
+
 Any issues, please contact Kausal at mkausal@gmail.com or kausalmalladi@gmail.com
 
 Suggestions are most welcome!!!
