@@ -57,27 +57,28 @@ class WebsiteFinder:
         try:
             # Trying to extract title, if it exists
             webpage_title = content.lower().split('<title>')[1].split('</title>')[0]
+            if "Access Denied".lower() in webpage_title: return "access denied"
+            company = self.removeStopWords(company).lower()
+            webpage_title = self.removeStopWords(webpage_title).lower()
+            exclude = set(string.punctuation)
+            company = ''.join(ch for ch in company if ch not in exclude)
+            webpage_title = ''.join(ch for ch in webpage_title if ch not in exclude)
+            if company not in webpage_title:
+                companySplit = company.split(' ')
+                companySplit = [item.lower() for item in companySplit]
+                webpageSplit = webpage_title.split(' ')
+                webpageSplit = [item.lower() for item in webpageSplit]
+                if set(companySplit) & set(webpageSplit) is not None:
+                    return "domain found"
+                return "title mismatch"
+            return "domain found"
         except IndexError:
             return "no title"
-        if "Access Denied".lower() in webpage_title: return "access denied"
-        company = self.removeStopWords(company).lower()
-        webpage_title = self.removeStopWords(webpage_title).lower()
-        exclude = set(string.punctuation)
-        company = ''.join(ch for ch in company if ch not in exclude)
-        webpage_title = ''.join(ch for ch in webpage_title if ch not in exclude)
-        if company not in webpage_title:
-            companySplit = company.split(' ')
-            companySplit = [item.lower() for item in companySplit]
-            webpageSplit = webpage_title.split(' ')
-            webpageSplit = [item.lower() for item in webpageSplit]
-            if set(companySplit) & set(webpageSplit) is not None:
-                return "domain found"
-            return "title mismatch"
-        return "domain found"
 
     def searchWeb(self, company):
         count = 0
         for url in search(company + "website", stop=max_results):
+            if "en.wikipedia.org" in url: continue
             crawl_url_result = self.crawl(url, company)
             if (crawl_url_result == "access denied" or crawl_url_result == "no title"):
                 # If first result is not crawlable or title is not mentioned

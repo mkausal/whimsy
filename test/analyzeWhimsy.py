@@ -37,7 +37,13 @@ def analyzeApp():
         # A few URLs found, have '/' in the end, so removing it
         if url is not None:
             if url.endswith("/"): url = url[:-1]
-            if url.replace("www.","") == record[1].replace("www.",""):
+            url = url.replace("www.", "").replace("https:", "http:")
+            urlFromDB = record[1].replace("www.", "").replace("https:", "http:")
+            if len(url.split('/')) > 3:
+                url = url.rsplit('/', 1)[0]
+            if url == urlFromDB:
+                correct += 1
+            elif url.rsplit('.', 1)[0] == urlFromDB.rsplit('.', 1)[0]:
                 correct += 1
         total += 1
         percentage = correct * 100/ total
